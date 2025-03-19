@@ -11,10 +11,10 @@ public class SavingsAccount extends Account {
     /**
      * Constructor for creating a new savings account.
      *
-     * @param accountNumber The account number
-     * @param customerName The name of the account holder
+     * @param accountNumber  The account number
+     * @param customerName   The name of the account holder
      * @param initialBalance The initial balance
-     * @param interestRate The annual interest rate (%)
+     * @param interestRate   The annual interest rate (%)
      */
     public SavingsAccount(String accountNumber, String customerName, double initialBalance, double interestRate) {
         super(accountNumber, customerName, initialBalance); // Call to the parent constructor
@@ -27,14 +27,17 @@ public class SavingsAccount extends Account {
      * @return The calculated interest amount
      */
     public double calculateInterest() {
-        throw new UnsupportedOperationException("Method not implemented");
+        return (getBalance() * interestRate) / 100.0;
     }
 
     /**
      * Applies the calculated interest to the account balance.
      */
     public void applyInterest() {
-        throw new UnsupportedOperationException("Method not implemented");
+        double interest = calculateInterest();
+        setBalance(getBalance() + interest);
+        System.out.printf("Interest applied: $%.2f%n", interest);
+        logTransaction("INTEREST", interest);
     }
 
     /**
@@ -43,11 +46,25 @@ public class SavingsAccount extends Account {
      */
     @Override
     public void withdraw(double amount) {
-        throw new UnsupportedOperationException("Method not implemented");
+        if (amount <= 0) {
+            System.out.println("Withdrawal amount must be positive");
+            return;
+        }
+
+        if (getBalance() - amount < MIN_BALANCE) {
+            System.out.printf("Cannot withdraw $%.2f. Minimum balance of $%.2f must be maintained.%n", amount,
+                    MIN_BALANCE);
+            return;
+        }
+
+        setBalance(getBalance() - amount);
+        System.out.printf("Withdrew $%.2f from savings account%n", amount);
+        logTransaction("WITHDRAWAL", amount);
     }
 
     /**
-     * Overrides the displayInfo method to include savings account-specific information.
+     * Overrides the displayInfo method to include savings account-specific
+     * information.
      */
     @Override
     public void displayInfo() {
